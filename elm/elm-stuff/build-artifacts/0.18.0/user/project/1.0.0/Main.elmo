@@ -1,2 +1,216 @@
-var _user$project$Main$main = _elm_lang$virtual_dom$Native_VirtualDom.staticProgram(
-	_elm_lang$html$Html$text('Hello, World!'));
+var _user$project$Main$listItem = function (_p0) {
+	var _p1 = _p0;
+	var url_ = A2(
+		_elm_lang$core$Maybe$withDefault,
+		A2(_elm_lang$core$Basics_ops['++'], 'https://news.ycombinator.com/item?id=', _p1.id),
+		_p1.url);
+	return A2(
+		_elm_lang$html$Html$li,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$a,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$href(url_),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(_p1.title),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$view = function (model) {
+	var items = A2(_elm_lang$core$List$map, _user$project$Main$listItem, model.stories);
+	var storiesList = A2(
+		_elm_lang$html$Html$ul,
+		{ctor: '[]'},
+		items);
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(model.message),
+			_1: {
+				ctor: '::',
+				_0: storiesList,
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p2 = msg;
+		if (_p2._0.ctor === 'Ok') {
+			return A2(
+				_elm_lang$core$Platform_Cmd_ops['!'],
+				_elm_lang$core$Native_Utils.update(
+					model,
+					{stories: _p2._0._0, message: 'Got stories!'}),
+				{ctor: '[]'});
+		} else {
+			return A2(
+				_elm_lang$core$Platform_Cmd_ops['!'],
+				_elm_lang$core$Native_Utils.update(
+					model,
+					{
+						message: _elm_lang$core$Basics$toString(_p2._0._0)
+					}),
+				{ctor: '[]'});
+		}
+	});
+var _user$project$Main$fieldToString = function (_p3) {
+	var _p4 = _p3;
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		_p4.name,
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			' ',
+			_user$project$Main$queryToString(_p4.query)));
+};
+var _user$project$Main$queryToString = function (_p5) {
+	var _p6 = _p5;
+	var _p7 = _p6._0;
+	if (_elm_lang$core$List$isEmpty(_p7)) {
+		return '';
+	} else {
+		var str = A3(
+			_elm_lang$core$List$foldr,
+			F2(
+				function (x, y) {
+					return A2(_elm_lang$core$Basics_ops['++'], x, y);
+				}),
+			'',
+			A2(_elm_lang$core$List$map, _user$project$Main$fieldToString, _p7));
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'{ ',
+			A2(_elm_lang$core$Basics_ops['++'], str, ' }'));
+	}
+};
+var _user$project$Main$Model = F2(
+	function (a, b) {
+		return {stories: a, message: b};
+	});
+var _user$project$Main$Field = F2(
+	function (a, b) {
+		return {name: a, query: b};
+	});
+var _user$project$Main$Story = F3(
+	function (a, b, c) {
+		return {id: a, title: b, url: c};
+	});
+var _user$project$Main$storyDecoder = A4(
+	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional,
+	'url',
+	_elm_lang$core$Json_Decode$nullable(_elm_lang$core$Json_Decode$string),
+	_elm_lang$core$Maybe$Nothing,
+	A3(
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+		'title',
+		_elm_lang$core$Json_Decode$string,
+		A3(
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+			'id',
+			_elm_lang$core$Json_Decode$string,
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Main$Story))));
+var _user$project$Main$Query = function (a) {
+	return {ctor: 'Query', _0: a};
+};
+var _user$project$Main$field = F2(
+	function (name, fields) {
+		return A2(
+			_user$project$Main$Field,
+			name,
+			_user$project$Main$Query(fields));
+	});
+var _user$project$Main$topStoriesQuery = _user$project$Main$Query(
+	{
+		ctor: '::',
+		_0: A2(
+			_user$project$Main$field,
+			'hn',
+			{
+				ctor: '::',
+				_0: A2(
+					_user$project$Main$field,
+					'topStories',
+					{
+						ctor: '::',
+						_0: A2(
+							_user$project$Main$field,
+							'id',
+							{ctor: '[]'}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_user$project$Main$field,
+								'title',
+								{ctor: '[]'}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_user$project$Main$field,
+									'url',
+									{ctor: '[]'}),
+								_1: {ctor: '[]'}
+							}
+						}
+					}),
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	});
+var _user$project$Main$request = function () {
+	var decoder = A2(
+		_elm_lang$core$Json_Decode$at,
+		{
+			ctor: '::',
+			_0: 'data',
+			_1: {
+				ctor: '::',
+				_0: 'hn',
+				_1: {
+					ctor: '::',
+					_0: 'topStories',
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		_elm_lang$core$Json_Decode$list(_user$project$Main$storyDecoder));
+	var encoded = _elm_lang$http$Http$encodeUri(
+		_user$project$Main$queryToString(_user$project$Main$topStoriesQuery));
+	return A2(
+		_elm_lang$http$Http$get,
+		A2(_elm_lang$core$Basics_ops['++'], 'https://www.graphqlhub.com/graphql?query=', encoded),
+		decoder);
+}();
+var _user$project$Main$FetchHNTopStories = function (a) {
+	return {ctor: 'FetchHNTopStories', _0: a};
+};
+var _user$project$Main$init = A2(
+	_elm_lang$core$Platform_Cmd_ops['!'],
+	{
+		stories: {ctor: '[]'},
+		message: 'Waiting for a response... '
+	},
+	{
+		ctor: '::',
+		_0: A2(_elm_lang$http$Http$send, _user$project$Main$FetchHNTopStories, _user$project$Main$request),
+		_1: {ctor: '[]'}
+	});
+var _user$project$Main$main = _elm_lang$html$Html$program(
+	{
+		init: _user$project$Main$init,
+		view: _user$project$Main$view,
+		update: _user$project$Main$update,
+		subscriptions: function (_p8) {
+			return _elm_lang$core$Platform_Sub$none;
+		}
+	})();
